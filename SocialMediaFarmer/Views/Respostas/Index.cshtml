@@ -16,6 +16,12 @@
                 @Html.DisplayNameFor(model => model.Conteudo)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.DataPublicacao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Aceita)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Pergunta)
             </th>
             <th>
@@ -29,6 +35,12 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Conteudo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataPublicacao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Aceita)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Pergunta.Id)

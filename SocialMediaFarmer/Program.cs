@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SocialMediaFarmer.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Configuration.AddJsonFile("appsettings.json");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Add services to the container.
+// Adiciona serviços ao contêiner.
 builder.Services.AddControllersWithViews();
 
 // Configuração do banco de dados (se estiver usando o Entity Framework Core)
@@ -14,7 +15,7 @@ builder.Services.AddDbContext<Contexto>(options => options.UseNpgsql(connectionS
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure o pipeline de solicitação HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

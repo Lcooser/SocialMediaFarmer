@@ -56,7 +56,7 @@ namespace SocialMediaFarmer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titulo,Conteudo,UsuarioId")] Pergunta pergunta)
+        public async Task<IActionResult> Create([Bind("Id,Titulo,Conteudo,DataPublicacao,Resolvida,UsuarioId")] Pergunta pergunta)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace SocialMediaFarmer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Conteudo,UsuarioId")] Pergunta pergunta)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Conteudo,DataPublicacao,Resolvida,UsuarioId")] Pergunta pergunta)
         {
             if (id != pergunta.Id)
             {

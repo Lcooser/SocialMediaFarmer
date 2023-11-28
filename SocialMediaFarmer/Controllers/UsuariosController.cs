@@ -55,7 +55,7 @@ namespace SocialMediaFarmer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Email,Senha")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Email,Senha,Ativo")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace SocialMediaFarmer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Senha")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Senha,Ativo")] Usuario usuario)
         {
             if (id != usuario.Id)
             {
