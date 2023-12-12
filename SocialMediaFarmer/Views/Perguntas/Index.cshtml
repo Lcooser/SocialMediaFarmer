@@ -1,59 +1,30 @@
-﻿@model IEnumerable<SocialMediaFarmer.Models.Pergunta>
+﻿@model List<SocialMediaFarmer.Models.PerguntaRespostaViewModel>
 
-@{
-    ViewData["Title"] = "Index";
+<h2>Perguntas</h2>
+
+@foreach (var pergunta in Model)
+{
+    <div class="pergunta">
+        <h4>@pergunta.Topico</h4>
+        <p>@pergunta.Pergunta</p>
+        <p>Data de Publicação: @pergunta.DataPublicacao.ToString("dd/MM/yyyy")</p>
+        <p>Autor: @pergunta.NomeUsuario</p>
+
+        @if (User.Identity.IsAuthenticated && pergunta.Resolvida)
+        {
+            <p>Esta pergunta está resolvida.</p>
+        }
+
+        <div>
+            <button class="btn btn-secondary" onclick="location.href='@Url.Action("VisualizarRespostas", new { id = pergunta.PerguntaId })'">Visualizar Respostas</button>
+        </div>
+
+        @if (User.Identity.IsAuthenticated && User.Identity.Name == pergunta.NomeUsuario)
+        {
+            <div>
+                <input type="checkbox" id="resolvida" name="resolvida" @(pergunta.Resolvida ? "checked" : "") disabled />
+                <label for="resolvida">Marcar como Resolvida</label>
+            </div>
+        }
+    </div>
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Titulo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Conteudo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataPublicacao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Resolvida)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titulo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Conteudo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataPublicacao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Resolvida)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>

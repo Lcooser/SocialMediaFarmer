@@ -11,5 +11,7 @@ namespace SocialMediaFarmer.Models
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Pergunta> Pergunta { get; set; }
         public DbSet<Resposta> Resposta { get; set; }
+
+        public DbSet<Resposta> Respostas { get; set; }
     }
 }

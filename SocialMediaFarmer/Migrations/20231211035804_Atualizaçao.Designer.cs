@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SocialMediaFarmer.Models;
@@ -11,9 +12,10 @@ using SocialMediaFarmer.Models;
 namespace SocialMediaFarmer.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20231211035804_Atualizaçao")]
+    partial class Atualizaçao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,9 +35,6 @@ namespace SocialMediaFarmer.Migrations
                     b.Property<string>("Conteudo")
                         .HasColumnType("text");
 
-                    b.Property<string>("ConteudoPergunta")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("DataPublicacao")
                         .HasColumnType("timestamp without time zone");
 
@@ -43,9 +42,6 @@ namespace SocialMediaFarmer.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Titulo")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Topico")
                         .HasColumnType("text");
 
                     b.Property<int>("UsuarioId")
@@ -73,7 +69,7 @@ namespace SocialMediaFarmer.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DataPublicacao")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("PerguntaId")
                         .HasColumnType("integer");

@@ -1,0 +1,39 @@
+﻿@model SocialMediaFarmer.Models.PerguntaRespostaViewModel
+
+<h2>Respostas para a Pergunta</h2>
+
+<div class="pergunta">
+    <h4>@Model.Topico</h4>
+    <p>@Model.Pergunta</p>
+    <p>Data de Publicação: @Model.DataPublicacao.ToString("dd/MM/yyyy")</p>
+    <p>Autor: @Model.NomeUsuario</p>
+    @if (Model.Resolvida)
+    {
+        <p>Esta pergunta está resolvida.</p>
+    }
+</div>
+
+@foreach (var resposta in Model.Respostas)
+{
+    <div class="resposta">
+        <p>@resposta.Conteudo</p>
+        <p>Data de Publicação: @resposta.DataPublicacao.ToString("dd/MM/yyyy")</p>
+        <p>Autor: @resposta.NomeUsuario</p>
+    </div>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div>
+        <p>Sua Resposta:</p>
+        <form asp-action="Responder" method="post">
+            <input type="hidden" asp-for="PerguntaId" value="@Model.PerguntaId" />
+            <div class="form-group">
+                <textarea asp-for="Respostas" class="form-control"></textarea>
+            </div>
+            <div class="mt-3">
+                <a asp-action="FazerPergunta" asp-controller="Home" class="btn btn-success">Fazer Pergunta</a>
+            </div>
+        </form>
+    </div>
+}

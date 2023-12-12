@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SocialMediaFarmer.Models;
 
 namespace SocialMediaFarmer.Controllers
 {
+    [Authorize]
     public class PerguntasController : Controller
     {
         private readonly Contexto _context;
@@ -18,150 +19,114 @@ namespace SocialMediaFarmer.Controllers
             _context = context;
         }
 
-        // GET: Perguntas
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var contexto = _context.Pergunta.Include(p => p.Usuario);
-            return View(await contexto.ToListAsync());
-        }
-
-        // GET: Perguntas/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Pergunta == null)
-            {
-                return NotFound();
-            }
-
-            var pergunta = await _context.Pergunta
+            var perguntasRespostas = _context.Pergunta
                 .Include(p => p.Usuario)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (pergunta == null)
-            {
-                return NotFound();
-            }
+                .Include(p => p.Respostas)
+                .ThenInclude(r => r.Usuario)
+                .Select(p => new PerguntaRespostaViewModel
+                {
+                    PerguntaId = p.Id,
+                    Topico = p.Topico,
+                    Pergunta = p.ConteudoPergunta,
+                    DataPublicacao = p.DataPublicacao,
+                    Resolvida = p.Resolvida,
+                    NomeUsuario = p.Usuario.Nome,
+                    Respostas = p.Respostas.Select(r => new RespostaViewModel
+                    {
+                        RespostaId = r.Id,
+                        Conteudo = r.Conteudo,
+                        DataPublicacao = r.DataPublicacao,
+                        NomeUsuario = r.Usuario.Nome
+                    }).ToList()
+                })
+                .ToList();
 
-            return View(pergunta);
+            return View(perguntasRespostas);
         }
 
-        // GET: Perguntas/Create
-        public IActionResult Create()
+       
+        [HttpGet]
+        public IActionResult FazerPergunta()
         {
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id");
+            if (!User.Identity.IsAuthenticated)
+            {
+            
+                return RedirectToAction("Login", "Home", new { returnUrl = Url.Action("FazerPergunta", "Perguntas") });
+            }
+
             return View();
         }
 
-        // POST: Perguntas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titulo,Conteudo,DataPublicacao,Resolvida,UsuarioId")] Pergunta pergunta)
+        public IActionResult FazerPergunta(Pergunta pergunta)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(pergunta);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id", pergunta.UsuarioId);
-            return View(pergunta);
-        }
-
-        // GET: Perguntas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Pergunta == null)
-            {
-                return NotFound();
-            }
-
-            var pergunta = await _context.Pergunta.FindAsync(id);
-            if (pergunta == null)
-            {
-                return NotFound();
-            }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id", pergunta.UsuarioId);
-            return View(pergunta);
-        }
-
-        // POST: Perguntas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Conteudo,DataPublicacao,Resolvida,UsuarioId")] Pergunta pergunta)
-        {
-            if (id != pergunta.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(pergunta);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PerguntaExists(pergunta.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "Id", "Id", pergunta.UsuarioId);
-            return View(pergunta);
-        }
-
-        // GET: Perguntas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Pergunta == null)
-            {
-                return NotFound();
-            }
-
-            var pergunta = await _context.Pergunta
-                .Include(p => p.Usuario)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (pergunta == null)
-            {
-                return NotFound();
-            }
-
-            return View(pergunta);
-        }
-
-        // POST: Perguntas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Pergunta == null)
-            {
-                return Problem("Entity set 'Contexto.Pergunta'  is null.");
-            }
-            var pergunta = await _context.Pergunta.FindAsync(id);
-            if (pergunta != null)
-            {
-                _context.Pergunta.Remove(pergunta);
-            }
+            if (!User.Identity.IsAuthenticated)
             
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction("Login", "Home", new { returnUrl = Url.Action("FazerPergunta", "Perguntas") });
+            }
+
+            if (ModelState.IsValid)
+          
+                var usuarioId = ObterIdUsuarioLogado();
+                pergunta.UsuarioId = usuarioId;
+
+           
+                _context.Pergunta.Add(pergunta);
+                _context.SaveChanges();
+
+           
+                return RedirectToAction("Index");
+            }
+
+            return View(pergunta);
         }
 
-        private bool PerguntaExists(int id)
+
+
+        private int ObterIdUsuarioLogado()
         {
-          return (_context.Pergunta?.Any(e => e.Id == id)).GetValueOrDefault();
+           
+            if (User.Identity.IsAuthenticated)
+            {
+           
+                var idClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+              
+                if (idClaim != null && int.TryParse(idClaim.Value, out int userId))
+                {
+                    // Retorna o ID do usuário
+                    return userId;
+                }
+            }
+
+           
+            return -1;
         }
+        [HttpPost]
+        public IActionResult Responder(int perguntaId, string resposta)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var usuarioId = ObterIdUsuarioLogado(); 
+            var respostaModel = new Resposta
+            {
+                Conteudo = resposta,
+                DataPublicacao = DateTime.Now,
+                UsuarioId = usuarioId,
+                PerguntaId = perguntaId 
+            };
+
+            _context.Respostas.Add(respostaModel);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

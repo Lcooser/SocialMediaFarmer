@@ -8,8 +8,10 @@
         public string? Senha { get; set; }
         public bool Ativo { get; set; }
 
+        
+        public bool EstaAutenticado { get; set; }
+
         public List<Pergunta>? Perguntas { get; set; }
         public List<Resposta>? Respostas { get; set; }
-
     }
 }

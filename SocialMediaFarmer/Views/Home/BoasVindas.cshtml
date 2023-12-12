@@ -1,0 +1,16 @@
+﻿
+
+@if (User.Identity.IsAuthenticated)
+{
+    <p>Bem-vindo, @Model.Nome!</p>
+    <li class="nav-item">
+        <a class="nav-link" asp-area="" asp-controller="Perguntas" asp-action="Index">Perguntas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-area="" asp-controller="Respostas" asp-action="Index">Respostas</a>
+    </li>
+}
+else
+{
+    <p>Para começar, <a asp-action="Cadastro">cadastre-se</a> ou <a asp-action="Login">faça login</a>.</p>
+}
